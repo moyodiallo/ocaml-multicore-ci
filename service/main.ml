@@ -86,8 +86,6 @@ let has_role user = function
            ) -> true
     | _ -> false
 
-(* The app parameter (the GitHub app for this pipeline) is ignored for now;
-   we have decided not to use that as part of this CI. *)
 let main config mode app capnp_address github_auth submission_uri : ('a, [`Msg of string]) result =
   Lwt_main.run begin
     run_capnp capnp_address >>= fun (vat, rpc_engine_resolver) ->
@@ -157,10 +155,9 @@ let cmd ~with_github =
   let info = Cmd.info "ocaml-multicore-ci" ~doc in
   Cmd.v info term
 
-let () = 
+let () =
   let with_github = match Cmd.eval_peek_opts github_app_id with
   | (None, _) -> false
   | (Some _, _) -> true
   in
   Cmd.eval (cmd ~with_github) |> exit
-
